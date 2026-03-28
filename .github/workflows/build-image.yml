@@ -8,9 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        run: |
-          docker buildx use default
+        uses: docker/setup-buildx-action@v4
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          push: false
+          tags: turbomc:latest
+          file: ./Dockerfile
