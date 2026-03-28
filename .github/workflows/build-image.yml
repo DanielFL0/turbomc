@@ -12,3 +12,5 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+        run: |
+          docker buildx use default
