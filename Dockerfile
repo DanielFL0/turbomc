@@ -1,3 +1,3 @@
-FROM eclispe-temurin:25
+FROM eclipse-temurin:25
 
 WORKDIR /app
