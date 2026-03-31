@@ -1,0 +1,6 @@
+{
+  "backgroundSamplerEnabled": false,
+  "prometheusReporterEnabled": true,
+  "prometheusReporterPort": 9999,
+  "prometheusReporterBindAddress": "0.0.0.0"
+}
