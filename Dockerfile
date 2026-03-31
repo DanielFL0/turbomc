@@ -7,6 +7,8 @@ ARG PAPER_BUILD=225
 # Geyser version tracks the Minecraft version it targets.
 ARG GEYSER_MC_VERSION=latest
 ARG GEYSER_BUILD=latest
+ARG SPARK_VERSION=1.10.172
+ARG SPARK_BUILD=524
 
 WORKDIR /minecraft
 
@@ -19,11 +21,16 @@ RUN groupadd --system minecraft \
     && rm -rf /var/lib/apt/lists/* \
     && curl -fsSL -o paper.jar \
         "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" \
-    && mkdir -p plugins \
+    && mkdir -p plugins/spark \
     && curl -fsSL -o plugins/Geyser-Spigot.jar \
         "https://download.geysermc.org/v2/projects/geyser/versions/${GEYSER_MC_VERSION}/builds/${GEYSER_BUILD}/downloads/spigot" \
+    && curl -fsSL -o plugins/spark.jar \
+        "https://ci.lucko.me/job/spark/${SPARK_BUILD}/artifact/spark-bukkit/build/libs/spark-${SPARK_VERSION}-bukkit.jar" \
     && echo "eula=true" > eula.txt \
     && chown -R minecraft:minecraft /minecraft
+
+# Pre-configure Spark to expose a Prometheus metrics endpoint on port 9999.
+COPY --chown=minecraft:minecraft spark-config.json plugins/spark/config.json
 
 USER minecraft
 
