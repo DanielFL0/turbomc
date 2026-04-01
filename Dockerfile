@@ -2,8 +2,8 @@
 # Find builds at: https://api.papermc.io/v2/projects/paper/versions/<version>/builds
 FROM eclipse-temurin:21-jre-jammy
 
-ARG PAPER_VERSION=1.21.4
-ARG PAPER_BUILD=225
+ARG PAPER_VERSION=1.21.11
+ARG PAPER_BUILD=127
 # Geyser version tracks the Minecraft version it targets.
 ARG GEYSER_MC_VERSION=latest
 ARG GEYSER_BUILD=latest
