@@ -19,6 +19,7 @@ RUN groupadd --system minecraft \
     && rm -rf /var/lib/apt/lists/* \
     && curl -fsSL -o paper.jar \
         "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" \
+    && mkdir -p plugins \
     && curl -fsSL -o plugins/Geyser-Spigot.jar \
         "https://download.geysermc.org/v2/projects/geyser/versions/${GEYSER_MC_VERSION}/builds/${GEYSER_BUILD}/downloads/spigot" \
     && echo "eula=true" > eula.txt \
