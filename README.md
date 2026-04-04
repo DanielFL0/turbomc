@@ -2,9 +2,6 @@
 
 [![Build and Push](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml/badge.svg)](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml)
 [![GHCR](https://img.shields.io/badge/ghcr.io-turbomc-blue)](https://github.com/danielfl0/turbomc/pkgs/container/turbomc)
-[![Docker Image Size](https://img.shields.io/docker/image-size/danielfl0/turbomc/latest)](https://github.com/danielfl0/turbomc/pkgs/container/turbomc)
-[![License](https://img.shields.io/badge/license-GPL%20v2-blue)](LICENSE)
-[![Last Commit](https://img.shields.io/github/last-commit/danielfl0/turbomc)](https://github.com/danielfl0/turbomc/commits/main)
 
 Minecraft server for my friends and me.
 
