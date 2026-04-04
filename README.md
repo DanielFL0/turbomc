@@ -1,4 +1,8 @@
 # turbomc
+
+[![Build and Push](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml/badge.svg)](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml)
+[![GHCR](https://img.shields.io/badge/ghcr.io-turbomc-blue)](https://github.com/danielfl0/turbomc/pkgs/container/turbomc)
+
 Minecraft server for my friends and me.
 
 Runs [PaperMC](https://papermc.io/) with [Geyser](https://geysermc.org/) (Bedrock support) inside Docker. Images are built and published to ghcr.io automatically on every push to `main`.
