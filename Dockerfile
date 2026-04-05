@@ -12,17 +12,35 @@ WORKDIR /minecraft
 
 # Create a non-root user, install curl, download JARs, accept EULA — all in
 # one layer to keep the image small and avoid leaving package caches behind.
-RUN groupadd --system minecraft \
+RUN \
+    # Create a system group and matching non-root user for running the server.
+    # Using a system account (no login shell, no home outside /minecraft) limits
+    # the blast radius if the process is ever compromised.
+    groupadd --system minecraft \
     && useradd --system --gid minecraft --home-dir /minecraft minecraft \
+    \
+    # Install curl (needed to download JARs below), then wipe the apt cache so
+    # it doesn't bloat the image layer.
     && apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \
+    \
+    # Download the PaperMC server JAR for the requested version + build number.
+    # The URL is constructed from the PAPER_VERSION and PAPER_BUILD build args.
     && curl -fsSL -o paper.jar \
         "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" \
+    \
+    # Download the Geyser-Spigot plugin JAR into the plugins directory.
+    # Geyser bridges Bedrock Edition clients to the Java Edition server.
     && mkdir -p plugins \
     && curl -fsSL -o plugins/Geyser-Spigot.jar \
         "https://download.geysermc.org/v2/projects/geyser/versions/${GEYSER_MC_VERSION}/builds/${GEYSER_BUILD}/downloads/spigot" \
+    \
+    # Accept the Minecraft EULA. The server refuses to start without this file.
     && echo "eula=true" > eula.txt \
+    \
+    # Hand ownership of everything under /minecraft to the non-root user so the
+    # server process can write world data, logs, and config files at runtime.
     && chown -R minecraft:minecraft /minecraft
 
 USER minecraft
