@@ -1,12 +1,12 @@
 name: Fix Dependabot PR title
 
-on:
-  pull_request:
-    types: [opened, edited]
-
 permissions:
   contents: read
   pull-requests: write
+
+on:
+  pull_request:
+    types: [opened, edited]
 
 jobs:
   rename:
