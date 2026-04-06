@@ -47,7 +47,7 @@ USER minecraft
 
 # World data and logs are the only truly dynamic directories at runtime.
 # Mount named volumes here to persist them across container recreations.
-VOLUME ["/minecraft/world", "/minecraft/logs"]
+VOLUME ["/minecraft/world", "/minecraft/world_nether/", "/minecraft/world_the_end/", "/minecraft/logs"]
 
 # Java edition (TCP) and Geyser/Bedrock edition (UDP)
 EXPOSE 25565/tcp
