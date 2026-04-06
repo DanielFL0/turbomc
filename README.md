@@ -80,6 +80,8 @@ docker run -d \
   -p 25565:25565/tcp \
   -p 19132:19132/udp \
   -v mc-world:/minecraft/world \
+  -v mc-world-nether:/minecraft/world_nether \
+  -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
   ghcr.io/danielfl0/turbomc:<new-sha>
 ```
