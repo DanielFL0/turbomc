@@ -7,7 +7,27 @@ Backs up the `mc-world` Docker volume to S3-compatible storage using [rclone](ht
 ### Prerequisites
 
 - **Docker** — used to read the world volume.
-- **rclone** — used to upload the archive. Must be [installed](https://rclone.org/install/) and configured with at least one remote (`rclone config`).
+- **rclone** — used to upload the archive. Must be [installed](https://rclone.org/install/).
+
+### Configuring rclone
+
+A ready-to-use config template is provided at `scripts/rclone.conf.example`. Copy it to the default rclone config location and fill in your credentials:
+
+```bash
+mkdir -p ~/.config/rclone
+cp scripts/rclone.conf.example ~/.config/rclone/rclone.conf
+# Edit ~/.config/rclone/rclone.conf and replace the placeholder values
+```
+
+To find your credentials, go to the [Cloudflare dashboard](https://dash.cloudflare.com/) → **R2** → **Manage R2 API Tokens** and create an API token with Object Read & Write permissions. Your account ID is visible in the R2 overview page URL.
+
+The remote name in the config file (`[r2]`) must match the prefix you use in `RCLONE_REMOTE` (e.g. `r2:mc-backups`).
+
+Verify the remote is working before running the backup:
+
+```bash
+rclone lsd r2:
+```
 
 ### Usage
 
