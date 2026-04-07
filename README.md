@@ -1,6 +1,8 @@
 # turbomc
 
-[![Build and Push](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml/badge.svg)](https://github.com/danielfl0/turbomc/actions/workflows/docker.yml)
+[![Build and Push Docker Image](https://github.com/DanielFL0/turbomc/actions/workflows/docker.yml/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/docker.yml)
+[![CodeQL](https://github.com/DanielFL0/turbomc/actions/workflows/codeql.yml/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/codeql.yml)
+[![Dependabot](https://github.com/DanielFL0/turbomc/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/dependabot/dependabot-updates)
 [![GHCR](https://img.shields.io/badge/ghcr.io-turbomc-blue)](https://github.com/danielfl0/turbomc/pkgs/container/turbomc)
 [![License](https://img.shields.io/github/license/danielfl0/turbomc)](https://github.com/DanielFL0/turbomc/blob/main/LICENSE)
 
