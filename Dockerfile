@@ -1,52 +1,25 @@
-# Update PAPER_VERSION and PAPER_BUILD to match your desired release.
-# Find builds at: https://api.papermc.io/v2/projects/paper/versions/<version>/builds
+# Place paper.jar in the repo root and plugin JARs in plugins/ before building.
+# Download Paper from https://papermc.io/downloads
+# Download Geyser from https://geysermc.org/download
 FROM eclipse-temurin:21-jre-jammy
-
-ARG PAPER_VERSION=1.21.11
-ARG PAPER_BUILD=128
-# Geyser version tracks the Minecraft version it targets.
-ARG GEYSER_MC_VERSION=latest
-ARG GEYSER_BUILD=latest
 
 WORKDIR /minecraft
 
-# Create a non-root user, install curl, download JARs, accept EULA — all in
-# one layer to keep the image small and avoid leaving package caches behind.
-RUN \
-    # Create a system group and matching non-root user for running the server.
-    # Using a system account (no login shell, no home outside /minecraft) limits
-    # the blast radius if the process is ever compromised.
-    groupadd --system minecraft \
+# Create a non-root user and accept the EULA.
+RUN groupadd --system minecraft \
     && useradd --system --gid minecraft --home-dir /minecraft minecraft \
-    \
-    # Install curl (needed to download JARs below), then wipe the apt cache so
-    # it doesn't bloat the image layer.
-    && apt-get update \
-    && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/* \
-    \
-    # Download the PaperMC server JAR for the requested version + build number.
-    # The URL is constructed from the PAPER_VERSION and PAPER_BUILD build args.
-    && curl -fsSL -o paper.jar \
-        "https://fill-data.papermc.io/v1/objects/7a6774a582b1c24328b779854f43f2d3ac3bd2daeb5cedbbd1074f0871635a18/paper-1.21.11-128.jar" \
-    \
-    # Download the Geyser-Spigot plugin JAR into the plugins directory.
-    # Geyser bridges Bedrock Edition clients to the Java Edition server.
-    && mkdir -p plugins \
-    && curl -fsSL -o plugins/Geyser-Spigot.jar \
-        "https://download.geysermc.org/v2/projects/geyser/versions/${GEYSER_MC_VERSION}/builds/${GEYSER_BUILD}/downloads/spigot" \
-    \
-    # Accept the Minecraft EULA. The server refuses to start without this file.
-    && echo "eula=true" > eula.txt \
-    \
-    # Hand ownership of everything under /minecraft to the non-root user so the
-    # server process can write world data, logs, and config files at runtime.
-    && chown -R minecraft:minecraft /minecraft
+    && echo "eula=true" > eula.txt
+
+# Copy server JAR and plugins from the build context.
+COPY paper.jar .
+COPY plugins/ plugins/
+
+# Hand ownership to the non-root user.
+RUN chown -R minecraft:minecraft /minecraft
 
 USER minecraft
 
-# World data and logs are the only truly dynamic directories at runtime.
-# Mount named volumes here to persist them across container recreations.
+# World data and logs persist across container recreations.
 VOLUME ["/minecraft/world", "/minecraft/world_nether/", "/minecraft/world_the_end/", "/minecraft/logs"]
 
 # Java edition (TCP) and Geyser/Bedrock edition (UDP)
