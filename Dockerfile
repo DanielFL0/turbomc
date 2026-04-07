@@ -28,7 +28,7 @@ RUN \
     # Download the PaperMC server JAR for the requested version + build number.
     # The URL is constructed from the PAPER_VERSION and PAPER_BUILD build args.
     && curl -fsSL -o paper.jar \
-        "https://api.papermc.io/v2/projects/paper/versions/${PAPER_VERSION}/builds/${PAPER_BUILD}/downloads/paper-${PAPER_VERSION}-${PAPER_BUILD}.jar" \
+        "https://fill-data.papermc.io/v1/objects/7a6774a582b1c24328b779854f43f2d3ac3bd2daeb5cedbbd1074f0871635a18/paper-1.21.11-128.jar" \
     \
     # Download the Geyser-Spigot plugin JAR into the plugins directory.
     # Geyser bridges Bedrock Edition clients to the Java Edition server.
