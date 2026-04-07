@@ -20,7 +20,8 @@ The pre-built image ships with:
 
 | Plugin | Purpose |
 |--------|---------|
-| [Geyser](https://geysermc.org/) | Bedrock Edition crossplay support |
+| [Geyser](https://geysermc.org/wiki/geyser/) | Bedrock Edition crossplay support |
+| [Floodgate](https://geysermc.org/wiki/floodgate/) | Ability for clients to join Minecraft |
 
 ## Using the pre-built image
 
