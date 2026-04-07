@@ -35,13 +35,26 @@ jobs:
         with:
           images: ghcr.io/danielfl0/turbomc
           tags: |
-            type=sha,enable=${{ github.ref_type == 'branch' }}
-            type=semver,pattern={{version}},enable=${{ github.ref_type == 'tag' }}
+            type=sha
             type=raw,value=latest
+
+      - name: Download server JARs
+        run: |
+          MC_VERSION="1.21.4"
+          BUILDS_JSON=$(curl -fsSL "https://api.papermc.io/v2/projects/paper/versions/${MC_VERSION}/builds")
+          LATEST_BUILD=$(echo "$BUILDS_JSON" | jq -r '.builds[-1].build')
+          DOWNLOAD_NAME=$(echo "$BUILDS_JSON" | jq -r '.builds[-1].downloads.application.name')
+          curl -fsSL -o paper.jar \
+            "https://api.papermc.io/v2/projects/paper/versions/${MC_VERSION}/builds/${LATEST_BUILD}/downloads/${DOWNLOAD_NAME}"
+
+          mkdir -p plugins
+          curl -fsSL -o plugins/Geyser-Spigot.jar \
+            "https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest/downloads/spigot"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           file: ./Dockerfile
