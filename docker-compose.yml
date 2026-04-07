@@ -1,0 +1,41 @@
+services:
+  paper:
+    profiles: [paper]
+    image: ghcr.io/danielfl0/turbomc:latest
+    container_name: turbomc
+    restart: unless-stopped
+    ports:
+      - "25565:25565/tcp"
+      - "19132:19132/udp"
+    volumes:
+      - mc-world:/minecraft/world
+      - mc-world-nether:/minecraft/world_nether
+      - mc-world-the-end:/minecraft/world_the_end
+      - mc-logs:/minecraft/logs
+
+  vanilla:
+    profiles: [vanilla]
+    image: ghcr.io/danielfl0/turbomc:vanilla-latest
+    container_name: turbomc
+    restart: unless-stopped
+    ports:
+      - "25565:25565/tcp"
+    volumes:
+      - mc-world:/minecraft/world
+      # Vanilla stores nether/end inside the world dir; PaperMC uses sibling dirs.
+      # Remapping the same volumes to vanilla's expected paths preserves all world data.
+      - mc-world-nether:/minecraft/world/DIM-1
+      - mc-world-the-end:/minecraft/world/DIM1
+      - mc-logs:/minecraft/logs
+
+# Volumes are declared external because they were created before Compose existed.
+# Run the chown step from the README before first use if they don't exist yet.
+volumes:
+  mc-world:
+    external: true
+  mc-world-nether:
+    external: true
+  mc-world-the-end:
+    external: true
+  mc-logs:
+    external: true
