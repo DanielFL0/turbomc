@@ -5,25 +5,36 @@
 
 Minecraft server for my friends and me.
 
-Runs [PaperMC](https://papermc.io/) with [Geyser](https://geysermc.org/) (Bedrock support) inside Docker. Images are built and published to ghcr.io automatically on every push to `main`.
+Runs [PaperMC](https://papermc.io/) with [Geyser](https://geysermc.org/) (Bedrock support) inside Docker. Bring your own server JAR and plugins — the Dockerfile just copies them in. Images are built and published to ghcr.io automatically on every push to `main`.
 
 ## Requirements
 
 - A Linux VPS with Docker installed
-- The commit SHA of the image you want to run (find it in the [Actions tab](../../actions) or with `git log --oneline`)
+
+## Using the pre-built image
+
+Find the commit SHA of the image you want in the [Actions tab](../../actions) or with `git log --oneline`:
+
+```bash
+docker pull ghcr.io/danielfl0/turbomc:<sha>
+```
+
+## Building locally
+
+If you want to build the image yourself (e.g. to use a different Paper version or add custom plugins):
+
+1. Download `paper.jar` from [PaperMC](https://papermc.io/downloads) and place it in the repo root.
+2. Download plugin JARs (e.g. `Geyser-Spigot.jar` from [GeyserMC](https://geysermc.org/download)) and place them in `plugins/`.
+3. Build the image:
+
+```bash
+docker build -t turbomc .
+```
 
 ## 1. Install Docker
 
 ```bash
 curl -fsSL https://get.docker.com | sh
-```
-
-## 2. Pull the image
-
-Use a version tag from the [Releases page](../../releases) (recommended) or a specific commit SHA from the [Actions tab](../../actions):
-
-```bash
-docker pull ghcr.io/danielfl0/turbomc:v1.0.0
 ```
 
 ## 3. Fix volume permissions
@@ -51,7 +62,7 @@ docker run -d \
   -v mc-world-nether:/minecraft/world_nether \
   -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
-  ghcr.io/danielfl0/turbomc:v1.0.0
+  ghcr.io/danielfl0/turbomc:<sha>
 ```
 
 - Java Edition players connect on port `25565`
@@ -66,10 +77,10 @@ If port `25565` is already in use, map to a different external port (players wil
 
 ## Updating
 
-Pull the new version tag from the [Releases page](../../releases), stop the old container, and start a new one with the same volume flags. World data is preserved in the volumes.
+Pull the new SHA image, stop the old container, and start a new one with the same volume flags. World data is preserved in the volumes.
 
 ```bash
-docker pull ghcr.io/danielfl0/turbomc:v1.1.0
+docker pull ghcr.io/danielfl0/turbomc:<new-sha>
 docker rm -f turbomc
 docker run -d \
   --name turbomc \
@@ -80,7 +91,7 @@ docker run -d \
   -v mc-world-nether:/minecraft/world_nether \
   -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
-  ghcr.io/danielfl0/turbomc:v1.1.0
+  ghcr.io/danielfl0/turbomc:<new-sha>
 ```
 
 ## Logs
