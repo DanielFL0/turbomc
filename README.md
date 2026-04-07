@@ -11,6 +11,14 @@ Runs [PaperMC](https://papermc.io/) with [Geyser](https://geysermc.org/) (Bedroc
 
 - A Linux VPS with Docker installed
 
+## What's included
+
+The pre-built image ships with:
+
+| Plugin | Purpose |
+|--------|---------|
+| [Geyser](https://geysermc.org/) | Bedrock Edition crossplay support |
+
 ## Using the pre-built image
 
 Find the commit SHA of the image you want in the [Actions tab](../../actions) or with `git log --oneline`:
