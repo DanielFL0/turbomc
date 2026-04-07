@@ -18,33 +18,28 @@ Runs [PaperMC](https://papermc.io/) with [Geyser](https://geysermc.org/) (Bedroc
 curl -fsSL https://get.docker.com | sh
 ```
 
-## 2. Authenticate with GitHub Container Registry
+## 2. Pull the image
 
-Required if the package visibility is set to private.
-Create a [Personal Access Token](https://github.com/settings/tokens) with the `read:packages` scope, then:
-
-```bash
-echo <YOUR_PAT> | docker login ghcr.io -u <your-github-username> --password-stdin
-```
-
-## 3. Pull the image
+Use a version tag from the [Releases page](../../releases) (recommended) or a specific commit SHA from the [Actions tab](../../actions):
 
 ```bash
-docker pull ghcr.io/danielfl0/turbomc:<sha>
+docker pull ghcr.io/danielfl0/turbomc:v1.0.0
 ```
 
-## 4. Fix volume permissions
+## 3. Fix volume permissions
 
 The server runs as a non-root user. Run this once before starting the container so it can write to its data volumes:
 
 ```bash
 docker run --rm \
   -v mc-world:/minecraft/world \
+  -v mc-world-nether:/minecraft/world_nether \
+  -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
-  alpine chown -R 999:999 /minecraft/world /minecraft/logs
+  alpine chown -R 999:999 /minecraft/world /minecraft/world_nether /minecraft/world_the_end /minecraft/logs
 ```
 
-## 5. Run
+## 4. Run
 
 ```bash
 docker run -d \
@@ -53,8 +48,10 @@ docker run -d \
   -p 25565:25565/tcp \
   -p 19132:19132/udp \
   -v mc-world:/minecraft/world \
+  -v mc-world-nether:/minecraft/world_nether \
+  -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
-  ghcr.io/danielfl0/turbomc:<sha>
+  ghcr.io/danielfl0/turbomc:v1.0.0
 ```
 
 - Java Edition players connect on port `25565`
@@ -69,10 +66,10 @@ If port `25565` is already in use, map to a different external port (players wil
 
 ## Updating
 
-Pull the new image SHA, stop the old container, and start a new one with the same volume flags. World data is preserved in the volumes.
+Pull the new version tag from the [Releases page](../../releases), stop the old container, and start a new one with the same volume flags. World data is preserved in the volumes.
 
 ```bash
-docker pull ghcr.io/danielfl0/turbomc:<new-sha>
+docker pull ghcr.io/danielfl0/turbomc:v1.1.0
 docker rm -f turbomc
 docker run -d \
   --name turbomc \
@@ -83,7 +80,7 @@ docker run -d \
   -v mc-world-nether:/minecraft/world_nether \
   -v mc-world-the-end:/minecraft/world_the_end \
   -v mc-logs:/minecraft/logs \
-  ghcr.io/danielfl0/turbomc:<new-sha>
+  ghcr.io/danielfl0/turbomc:v1.1.0
 ```
 
 ## Logs
