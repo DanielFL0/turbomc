@@ -1,6 +1,6 @@
 # Update PAPER_VERSION and PAPER_BUILD to match your desired release.
 # Find builds at: https://api.papermc.io/v2/projects/paper/versions/<version>/builds
-FROM eclipse-temurin:25-jre-jammy
+FROM eclipse-temurin:21-jre-jammy
 
 ARG PAPER_VERSION=1.21.1
 ARG PAPER_BUILD=127
