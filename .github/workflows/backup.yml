@@ -1,0 +1,52 @@
+name: Backup to Cloudflare R2
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    steps:
+      - name: Create SSH key
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Compress backup and send to R2
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ vars.VPS_USER }}@${{ vars.VPS_HOST }} << 'EOF'
+          set -e
+
+          BACKUP_DIR="/root/server"
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          BACKUP_FILE="/tmp/papermc-backup-$TIMESTAMP.tar.gz"
+
+          cd $BACKUP_DIR
+          tar -czf $BACKUP_FILE \
+            world \
+            world_nether \
+            world_the_end \
+            server.properties \
+            bukkit.yml \
+            spigot.yml \
+            paper.yml \
+            ops.json \
+            whitelist.json \
+            banned-players.json \
+            banned-ips.json \
+            plugins/
+
+          rclone copy $BACKUP_FILE Minecraft:turbomc/papermc-backups/ --stats-one-line
+          rm $BACKUP_FILE
+          EOF
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
