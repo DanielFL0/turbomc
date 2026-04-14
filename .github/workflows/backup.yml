@@ -39,7 +39,7 @@ jobs:
             paper.yml \
             ops.json \
             whitelist.json \
-            banned-players.json \Masayoshi Takanaka
+            banned-players.json \
             banned-ips.json \
             plugins/
 
