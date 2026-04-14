@@ -36,7 +36,6 @@ jobs:
             server.properties \
             bukkit.yml \
             spigot.yml \
-            paper.yml \
             ops.json \
             whitelist.json \
             banned-players.json \
