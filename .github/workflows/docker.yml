@@ -1,19 +1,21 @@
 name: Build and Push Docker Image
 
-permissions:
-  contents: read
-  packages: write
-
 on:
   push:
     branches: [main]
     paths:
       - Dockerfile
+      - .github/workflows/docker.yml
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.version }}
 
     steps:
       - name: Checkout code
@@ -53,10 +55,51 @@ jobs:
           curl -fsSL -o plugins/Floodgate-Spigot.jar \
             "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest/downloads/spigot"
 
+          VIA_URL=$(curl -fsSL "https://api.github.com/repos/ViaVersion/ViaVersion/releases/latest" \
+            | jq -r '.assets[0].browser_download_url')
+          curl -fsSL -o plugins/ViaVersion.jar "$VIA_URL"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v7
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           file: ./Dockerfile
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    steps:
+      - name: Create SSH key
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Deploy to VPS
+        run: |
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ vars.VPS_USER }}@${{ vars.VPS_HOST }} << 'EOF'
+          set -e
+          docker pull ghcr.io/danielfl0/turbomc:${{ needs.build.outputs.image-tag }}
+          docker rm -f turbomc || true
+          docker run -d \
+            --name turbomc \
+            --restart unless-stopped \
+            -p 25565:25565/tcp \
+            -p 19132:19132/udp \
+            -v /root/server/world:/minecraft/world \
+            -v /root/server/world_nether:/minecraft/world_nether \
+            -v /root/server/world_the_end:/minecraft/world_the_end \
+            -v /root/server/logs:/minecraft/logs \
+            ghcr.io/danielfl0/turbomc:${{ needs.build.outputs.image-tag }}
+          EOF
+
+      - name: Clean up SSH key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
