@@ -1,8 +1,6 @@
 # turbomc
 
 [![Build and Push Docker Image](https://github.com/DanielFL0/turbomc/actions/workflows/docker.yml/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/docker.yml)
-[![CodeQL](https://github.com/DanielFL0/turbomc/actions/workflows/codeql.yml/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/codeql.yml)
-[![Dependabot](https://github.com/DanielFL0/turbomc/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/DanielFL0/turbomc/actions/workflows/dependabot/dependabot-updates)
 [![GHCR](https://img.shields.io/badge/ghcr.io-turbomc-blue)](https://github.com/danielfl0/turbomc/pkgs/container/turbomc)
 [![License](https://img.shields.io/github/license/danielfl0/turbomc)](https://github.com/DanielFL0/turbomc/blob/main/LICENSE)
 
@@ -22,6 +20,7 @@ The pre-built image ships with:
 |--------|---------|
 | [Geyser](https://geysermc.org/wiki/geyser/) | Bedrock Edition crossplay support |
 | [Floodgate](https://geysermc.org/wiki/floodgate/) | Ability for clients to join Minecraft |
+| [ViaVersion](https://viaversion.com/) | Allows newer client versions to connect |
 
 ## Using the pre-built image
 
