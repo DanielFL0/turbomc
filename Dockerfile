@@ -1,7 +1,7 @@
 # Place paper.jar in the repo root and plugin JARs in plugins/ before building.
 # Download Paper from https://papermc.io/downloads
 # Download Geyser from https://geysermc.org/download
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 
 WORKDIR /minecraft
 
